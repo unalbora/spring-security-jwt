@@ -23,11 +23,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
     private final UserDetailsService userDetailsService;
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String authHeader = request.getHeader("Authorization");
-        if (Objects.isNull(authHeader) || !authHeader.contains("Bearer")) {
+        String authHeader = request.getHeader(AUTHORIZATION);
+        if (Objects.isNull(authHeader) || !authHeader.contains(BEARER)) {
             filterChain.doFilter(request, response);
             return;
         }

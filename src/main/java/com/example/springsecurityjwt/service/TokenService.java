@@ -11,20 +11,22 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class TokenService {
 
     private static final String SECRET_KEY = "70337336763979244226452948404D635166546A576E5A7234743777217A2543";
+    private static final String AUTHORITIES = "authorities";
+    private static final int VALIDITY_PERIOD = 1000 * 60 * 10;
 
     public String generateToken(Authentication authentication) {
         return Jwts
                 .builder()
-                .setClaims(new HashMap<>())
+                .setClaims(Map.of(AUTHORITIES, authentication.getAuthorities()))
                 .setSubject(authentication.getName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + VALIDITY_PERIOD))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
